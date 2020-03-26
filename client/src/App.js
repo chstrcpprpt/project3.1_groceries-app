@@ -45,7 +45,7 @@ function App() {
   const updateGrocery = async (ev, id) => {
     ev.stopPropagation;
     const payload = {
-      completed: !groceries.find(item => item._id === id).completed
+      isPurchased: !groceries.find(item => item._id === id).isPurchased
     }
     const updatedGrocery = await APIHelper.updateGrocery(id, payload);
     setGroceries(groceries.map(item => (item._id === id ? updatedGrocery : item)))
@@ -53,7 +53,31 @@ function App() {
 
   return (
     <div className="App">
-      
+      <div>
+        <input
+          id="grocery-input"
+          type="text"
+          value={inputGrocery}
+          onChange={({ target }) => setInputGrocery(target.value)}
+        />
+        <button
+          type="button"
+          onClick={createGrocery}
+        >Add</button>
+      </div>
+
+      <ul>
+        {groceries.map(({_id, item, isPurchased}, index) => (
+          <li
+            key={index}
+            onClick={ev => updateGrocery(ev, _id)}
+            className={isPurchased ? "purchased" : ""}
+        >
+          {item} <span onClick={ev => deleteGrocery(ev, _id)}>&times;</span>
+        </li>
+        ))}
+      </ul>
+
     </div>
   );
 }
